@@ -1,0 +1,3 @@
+PIllow
+PyAutoGUI
+win10toast
