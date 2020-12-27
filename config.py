@@ -14,6 +14,9 @@ references_table = [{'img': 'assets/1C.png',
 
                     {'img': 'assets/7A.png',
                      'confidence': 0.95},
+
+                    {'img': 'assets/FF.png',
+                     'confidence': 0.95},
                     ]
 
 references_reqs = [{'img': 'assets/1Cs.png',
@@ -30,9 +33,12 @@ references_reqs = [{'img': 'assets/1Cs.png',
 
                    {'img': 'assets/7As.png',
                     'confidence': 0.9},
+
+                   {'img': 'assets/FFs.png',
+                    'confidence': 0.9},
                    ]
 
-elements_size = [16, 25, 36]
+elements_size = [16, 25, 36, 49]
 
 font = ImageFont.truetype("arial.ttf", 30)
 

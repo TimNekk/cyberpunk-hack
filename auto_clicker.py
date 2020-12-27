@@ -3,7 +3,6 @@ from time import sleep
 from config import click_delay
 
 
-
 def click_on_line(line, size=6):
     # hotkey('alt', 'tab')
     sleep(click_delay)
@@ -35,4 +34,3 @@ def click_on_line(line, size=6):
         print(f'коорды после нажания {cords}')
         print()
         sleep(click_delay)
-        sleep(0.1)

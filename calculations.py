@@ -69,10 +69,7 @@ def get_reqs():
     return reqs
 
 
-def get_best_line():
-    table = get_table()
-    reqs = get_reqs()
-
+def get_best_line(table, reqs):
     line21, line20, line10, line2, line1, line0 = [], [], [], [], [], []
 
     i0 = 0
