@@ -69,7 +69,7 @@ def get_reqs():
     return reqs
 
 
-def get_best_line(table, reqs):
+def get_best_line(table, reqs, auto_clicker=True):
     line21, line20, line10, line2, line1, line0 = [], [], [], [], [], []
 
     i0 = 0
@@ -116,16 +116,19 @@ def get_best_line(table, reqs):
                                                f"{table[i6][i7]['id']}" \
                                                f"{table[i8][i7]['id']}"
 
-                                        line = [table[i0][i1],
-                                                table[i2][i1],
-                                                table[i2][i3],
-                                                table[i4][i3],
-                                                table[i4][i5],
-                                                table[i6][i5],
-                                                table[i6][i7],
-                                                table[i8][i7]]
-
-                                        line = ([i1, i0], [i1, i2], [i3, i2], [i3, i4], [i5, i4], [i5, i6], [i7, i6], [i7, i8])
+                                        if auto_clicker:
+                                            line = (
+                                            [i1, i0], [i1, i2], [i3, i2], [i3, i4], [i5, i4], [i5, i6], [i7, i6],
+                                            [i7, i8])
+                                        else:
+                                            line = [table[i0][i1],
+                                                    table[i2][i1],
+                                                    table[i2][i3],
+                                                    table[i4][i3],
+                                                    table[i4][i5],
+                                                    table[i6][i5],
+                                                    table[i6][i7],
+                                                    table[i8][i7]]
 
                                         if len(reqs) == 1:
                                             if reqs[0] in code:
