@@ -8,19 +8,13 @@ from log import show_notification
 BD - 2
 E9 - 3
 7A - 4
+FF - 5
 """
 
 
 def print_line(line):
     i0, i1, i2, i3, i4, i5, i6, i7, i8 = line
     print(f"({i1}, {i0}) ({i1}, {i2}) ({i3}, {i2}) ({i3}, {i4}) ({i5}, {i4}) ({i5}, {i6}) ({i7}, {i6}) ({i7}, {i8})")
-
-
-# table = [[0, 0, 1, 2, 3],
-#          [2, 0, 2, 1, 2],
-#          [2, 3, 1, 0, 1],
-#          [1, 0, 2, 0, 3],
-#          [3, 3, 0, 3, 1]]
 
 
 def print_table(table):
@@ -47,11 +41,6 @@ def get_table():
     return table
 
 
-# reqs = ['342',
-#         '21',
-#         '43']
-
-
 def get_reqs():
     reqs = []
     elements = get_elements(table=False)
@@ -69,99 +58,69 @@ def get_reqs():
     return reqs
 
 
-def get_best_line(table, reqs, auto_clicker=True):
+def get_best_line(table, reqs, buffer=8, auto_clicker=True):
     line21, line20, line10, line2, line1, line0 = [], [], [], [], [], []
+    size = len(table)
 
-    i0 = 0
-    for i1 in range(len(table)):
-        buffer_temp = 8
-        while buffer_temp != 0:
+    from combinations_generator import get_lines
+    lines = get_lines(buffer, size)
 
-            for i2 in range(len(table)):
-                if i2 == i0:
-                    continue
+    for line in lines:
+        # Создание code
+        code = ''
+        for i in range(buffer-1):
+            if i % 2 == 0:
+                code += str(table[line[i]][line[i+1]]['id'])
+            else:
+                code += str(table[line[i+1]][line[i]]['id'])
 
-                for i3 in range(len(table)):
-                    if i3 == i1:
-                        continue
+        # Генерация координат
+        cords = []
+        if auto_clicker:
+            for i in range(buffer-1):
+                if i % 2 == 0:
+                    cords.append([line[i+1], line[i]])
+                else:
+                    cords.append([line[i], line[i+1]])
+        else:
+            for i in range(buffer-1):
+                if i % 2 == 0:
+                    cords.append(table[line[i]][line[i+1]])
+                else:
+                    cords.append(table[line[i+1]][line[i]])
 
-                    for i4 in range(len(table)):
-                        if i4 == i2:
-                            continue
+        # Если взлом протокола
+        if len(reqs) == 1:
+            if reqs[0] in code:
+                print('Взлом протокола')
+                show_notification('Взлом протокола', '')
+                return cords
+            else:
+                continue
 
-                        for i5 in range(len(table)):
-                            if i5 == i3:
-                                continue
+        # Присутсвие нужных комбинаций в code
+        is0 = reqs[0] in code
+        is1 = reqs[1] in code
+        is2 = reqs[2] in code
 
-                            for i6 in range(len(table)):
-                                if i6 == i4:
-                                    continue
+        if is0 and is1 and is2:
+            # Нашли все 3 комбинации
+            show_notification('3 и 2 и 1', 'Добыча данных')
+            print('line321')
+            return cords
+        elif is2 and is1:
+            line21 = cords
+        elif is2 and is0:
+            line20 = cords
+        elif is1 and is0:
+            line10 = cords
+        elif is2:
+            line2 = cords
+        elif is1:
+            line1 = cords
+        elif is0:
+            line0 = cords
 
-                                for i7 in range(len(table)):
-                                    if i7 == i5:
-                                        continue
-
-                                    for i8 in range(len(table)):
-                                        i_all = ((i1, i0), (i1, i2), (i3, i2), (i3, i4), (i5, i4), (i5, i6), (i7, i6), (i7, i8))
-
-                                        if i8 == i6 or len(i_all) != len(set(i_all)):
-                                            continue
-
-                                        code = f"{table[i0][i1]['id']}" \
-                                               f"{table[i2][i1]['id']}" \
-                                               f"{table[i2][i3]['id']}" \
-                                               f"{table[i4][i3]['id']}" \
-                                               f"{table[i4][i5]['id']}" \
-                                               f"{table[i6][i5]['id']}" \
-                                               f"{table[i6][i7]['id']}" \
-                                               f"{table[i8][i7]['id']}"
-
-                                        if auto_clicker:
-                                            line = (
-                                            [i1, i0], [i1, i2], [i3, i2], [i3, i4], [i5, i4], [i5, i6], [i7, i6],
-                                            [i7, i8])
-                                        else:
-                                            line = [table[i0][i1],
-                                                    table[i2][i1],
-                                                    table[i2][i3],
-                                                    table[i4][i3],
-                                                    table[i4][i5],
-                                                    table[i6][i5],
-                                                    table[i6][i7],
-                                                    table[i8][i7]]
-
-                                        if len(reqs) == 1:
-                                            if reqs[0] in code:
-                                                print('Взлом протокола')
-                                                show_notification('Взлом протокола', '')
-                                                return line
-                                            else:
-                                                continue
-
-                                        is0 = reqs[0] in code
-                                        is1 = reqs[1] in code
-                                        is2 = reqs[2] in code
-
-                                        if is0 and is1 and is2:
-                                            show_notification('3 и 2 и 1', 'Добыча данных')
-                                            print('line321')
-                                            print(i1, i2, i3, i4, i5, i6, i7, i8)
-                                            print_line((i0, i1, i2, i3, i4, i5, i6, i7, i8))
-                                            # print_table(table)
-                                            return line
-                                        elif is2 and is1:
-                                            line21 = line
-                                        elif is2 and is0:
-                                            line20 = line
-                                        elif is1 and is0:
-                                            line10 = line
-                                        elif is2:
-                                            line2 = line
-                                        elif is1:
-                                            line1 = line
-                                        elif is0:
-                                            line0 = line
-            buffer_temp -= 1
     if line21:
         print('line21')
         show_notification('3 и 2', 'Добыча данных')
@@ -186,11 +145,3 @@ def get_best_line(table, reqs, auto_clicker=True):
         print('line0')
         show_notification('1', 'Добыча данных')
         return line0
-
-    # return line21 if line21 else line20 if line20 else line10 if line10 else line2 if line2 else line1 if line1 else line0
-
-
-if __name__ == '__main__':
-    line = get_best_line()
-    print(line)
-    show_path(line)

@@ -2,7 +2,8 @@ def start(auto_clicker=True, alt_tab=False):
     from calculations import get_best_line, get_table, get_reqs
     table = get_table()
     reqs = get_reqs()
-    line = get_best_line(table, reqs, auto_clicker)
+    line = get_best_line(table, reqs, buffer=8, auto_clicker=auto_clicker)
+    print(line)
 
     if auto_clicker:
         from clicker import click_on_line
